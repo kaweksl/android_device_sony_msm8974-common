@@ -166,3 +166,7 @@ PRODUCT_PACKAGES += \
     wifilogd \
     wpa_supplicant \
     wpa_supplicant.conf
+
+# Doze
+PRODUCT_PACKAGES += \
+    OnePlusDoze
