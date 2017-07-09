@@ -110,6 +110,10 @@ PRODUCT_PACKAGES += \
     libdivxdrmdecrypt \
     libstagefrighthw
 
+# For android_filesystem_config.h
+PRODUCT_PACKAGES += \
+   fs_config_files
+
 # Overlay
 DEVICE_PACKAGE_OVERLAYS += $(COMMON_PATH)/overlay
 ifneq ($(BOARD_HAVE_RADIO),false)
