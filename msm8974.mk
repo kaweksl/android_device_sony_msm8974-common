@@ -13,30 +13,39 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-COMMON_PATH := device/sony/msm8974-common
-
-# Include HW subsystem-specific makefiles
--include $(LOCAL_PATH)/hardware/*/packages.mk
--include $(LOCAL_PATH)/hardware/*/copy.mk
--include $(LOCAL_PATH)/hardware/*/prop.mk
-
-# Include msm8974-common system properties
--include $(LOCAL_PATH)/systemprop.mk
+PLATFORM_PATH := device/sony/msm8974-common
 
 # inherit hidl hals
-$(call inherit-product, device/sony/msm8974-common/hidl.mk)
+$(call inherit-product, $(PLATFORM_PATH)/hidl.mk)
+
+# Overlay
+DEVICE_PACKAGE_OVERLAYS += \
+    $(PLATFORM_PATH)/overlay \
+    $(PLATFORM_PATH)/overlay-lineage
+
+ifneq ($(BOARD_HAVE_RADIO),false)
+    DEVICE_PACKAGE_OVERLAYS += $(PLATFORM_PATH)/overlay-radio
+    $(call inherit-product, $(PLATFORM_PATH)/radio.mk)
+else
+    DEVICE_PACKAGE_OVERLAYS += $(PLATFORM_PATH)/overlay-wifionly
+endif
+
+PRODUCT_ENFORCE_RRO_TARGETS := \
+    framework-res
 
 # Permissions
 PRODUCT_COPY_FILES += \
-    $(COMMON_PATH)/rootdir/system/vendor/etc/permissions/permissions_sony.xml:$(TARGET_COPY_OUT_VENDOR)/etc/permissions/permissions_sony.xml
+    $(PLATFORM_PATH)/rootdir/system/vendor/etc/permissions/permissions_sony.xml:$(TARGET_COPY_OUT_VENDOR)/etc/permissions/permissions_sony.xml
+
+# System properties
+include $(LOCAL_PATH)/systemprop.mk
 
 # Audio
 PRODUCT_PACKAGES += \
     audio.a2dp.default \
     audio.primary.msm8974 \
     audio.r_submix.default \
-    audio.usb.default \
-    audio_policy.msm8974
+    audio.usb.default
 
 PRODUCT_PACKAGES += \
     libaudio-resampler \
@@ -49,26 +58,33 @@ PRODUCT_PACKAGES += \
 # Audio configuration
 PRODUCT_COPY_FILES += \
     $(LOCAL_PATH)/audio/audio_effects.xml:$(TARGET_COPY_OUT_VENDOR)/etc/audio_effects.xml
+
 # Camera
 PRODUCT_COPY_FILES += \
     $(LOCAL_PATH)/configs/external_camera_config.xml:system/vendor/etc/external_camera_config.xml
+
+# Camera (stock blobs)
+PRODUCT_PACKAGES += \
+    camera.qcom \
+    libshims_signal \
+    libshims_idd \
+    libsonycamera \
+    libshim_camera \
+    libshim_cald
 
 # Display
 PRODUCT_PACKAGES += \
     hwcomposer.msm8974 \
     gralloc.msm8974 \
-    copybit.msm8974 \
     memtrack.msm8974 \
     libgenlock \
     libmemalloc \
     liboverlay \
-    libqdutils \
-    libtilerenderer \
-    libI420colorconvert
+    libqdutils
 
 # GPS
 PRODUCT_COPY_FILES += \
-    $(COMMON_PATH)/gps/gps.conf:$(TARGET_COPY_OUT_VENDOR)/etc/gps_debug.conf \
+    $(PLATFORM_PATH)/gps/gps.conf:$(TARGET_COPY_OUT_VENDOR)/etc/gps_debug.conf \
     frameworks/native/data/etc/android.hardware.location.gps.xml:$(TARGET_COPY_OUT_VENDOR)/etc/permissions/android.hardware.location.gps.xml
 
 PRODUCT_PACKAGES += \
@@ -93,9 +109,10 @@ PRODUCT_COPY_FILES += \
     frameworks/av/media/libstagefright/data/media_codecs_google_telephony.xml:$(TARGET_COPY_OUT_VENDOR)/etc/media_codecs_google_telephony.xml \
     frameworks/av/media/libstagefright/data/media_codecs_google_video.xml:$(TARGET_COPY_OUT_VENDOR)/etc/media_codecs_google_video.xml
 
-# Permissions
-PRODUCT_COPY_FILES += \
-    frameworks/native/data/etc/android.hardware.ethernet.xml:$(TARGET_COPY_OUT_VENDOR)/etc/permissions/android.hardware.ethernet.xml
+#  Mobile Data
+PRODUCT_PACKAGES += \
+    librmnetctl \
+    libxml2
 
 # Omx
 PRODUCT_PACKAGES += \
@@ -106,39 +123,16 @@ PRODUCT_PACKAGES += \
     libOmxQcelp13Enc \
     libOmxVdec \
     libOmxVenc \
-    libOmxVdecHevc \
     libc2dcolorconvert \
-    libdivxdrmdecrypt \
     libstagefrighthw
 
 # For android_filesystem_config.h
 PRODUCT_PACKAGES += \
    fs_config_files
 
-# Overlay
-DEVICE_PACKAGE_OVERLAYS += $(COMMON_PATH)/overlay
-ifneq ($(BOARD_HAVE_RADIO),false)
-    DEVICE_PACKAGE_OVERLAYS += $(COMMON_PATH)/overlay-radio
-    $(call inherit-product, $(COMMON_PATH)/radio.mk)
-else
-    DEVICE_PACKAGE_OVERLAYS += $(COMMON_PATH)/overlay-wifionly
-endif
-
-# Power
-# now qti binderised
-
-# Camera (stock blobs)
-PRODUCT_PACKAGES += \
-	camera.qcom \
-    libshims_signal \
-    libshims_idd \
-    libsonycamera \
-    libshim_camera \
-    libshim_cald
-
-# Snap Camera
-PRODUCT_PACKAGES += \
-    Snap
+# Permissions
+PRODUCT_COPY_FILES += \
+    frameworks/native/data/etc/android.hardware.ethernet.xml:$(TARGET_COPY_OUT_VENDOR)/etc/permissions/android.hardware.ethernet.xml
 
 # Recovery
 PRODUCT_PACKAGES += \
@@ -149,10 +143,9 @@ PRODUCT_COPY_FILES += \
     $(LOCAL_PATH)/seccomp/mediacodec.policy:$(TARGET_COPY_OUT_VENDOR)/etc/seccomp_policy/mediacodec.policy \
     $(LOCAL_PATH)/seccomp/mediaextractor.policy:$(TARGET_COPY_OUT_VENDOR)/etc/seccomp_policy/mediaextractor.policy
 
-#  Mobile Data
+# Snap Camera
 PRODUCT_PACKAGES += \
-    librmnetctl \
-    libxml2
+    Snap
 
 # Thermal management
 PRODUCT_PACKAGES += \
@@ -172,7 +165,6 @@ PRODUCT_PACKAGES += \
     libwpa_client \
     hostapd \
     wificond \
-    wifilogd \
     wpa_supplicant \
     wpa_supplicant.conf
 
