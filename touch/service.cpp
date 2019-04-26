@@ -20,6 +20,7 @@
 #include <hidl/HidlTransportSupport.h>
 #include <hwbinder/ProcessState.h>
 
+#include "GloveMode.h"
 #include "TouchscreenGesture.h"
 
 using android::OK;
@@ -28,17 +29,35 @@ using android::status_t;
 using android::hardware::configureRpcThreadpool;
 using android::hardware::joinRpcThreadpool;
 
+using ::vendor::lineage::touch::V1_0::IGloveMode;
+using ::vendor::lineage::touch::V1_0::implementation::GloveMode;
 using ::vendor::lineage::touch::V1_0::ITouchscreenGesture;
 using ::vendor::lineage::touch::V1_0::implementation::TouchscreenGesture;
 
 int main() {
     android::hardware::ProcessState::initWithMmapSize((size_t)8192);
 
+    sp<IGloveMode> gloveMode;    
     sp<TouchscreenGesture> touchscreenGesture;
     status_t status;
 
     LOG(INFO) << "Touch HAL service is starting.";
 
+    gloveMode = new GloveMode();
+    if (gloveMode == nullptr) {
+        LOG(ERROR) << "Can not create an instance of Touch HAL GloveMode Iface, exiting.";
+        goto shutdown;
+    }
+
+    configureRpcThreadpool(1, true /*callerWillJoin*/);
+
+    status = gloveMode->registerAsService();
+    if (status != OK) {
+        LOG(ERROR) << "Could not register service for Touch HAL GloveMode Iface ("
+                   << status << ")";
+        goto shutdown;
+    }
+    
     touchscreenGesture = new TouchscreenGesture();
     if (touchscreenGesture == nullptr) {
         LOG(ERROR) << "Can not create an instance of Touch HAL TouchscreenGesture Iface, exiting.";
