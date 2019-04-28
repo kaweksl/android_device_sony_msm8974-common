@@ -87,12 +87,12 @@
 # HALs
 /system/vendor/bin/hw/android\.hardware\.drm@1\.0-service.widevine u:object_r:hal_drm_widevine_exec:s0
 /system/vendor/bin/hw/android\.hardware\.gnss@1\.0-service-qti u:object_r:hal_gnss_qti_exec:s0
-/system/vendor/bin/hw/vendor\.lineage\.touch@1\.0-service\.sony_msm8974               u:object_r:hal_lineage_touch_default_exec:s0
+#/system/vendor/bin/hw/vendor\.lineage\.touch@1\.0-service\.sony_msm8974               u:object_r:hal_lineage_touch_default_exec:s0
 
 # Touch|glove
 /sys/devices/virtual/input/input1/glove                                                             u:object_r:sysfs_touch:s0
 
-/(vendor|system/vendor)/bin/hw/android\.hardware\.drm@1\.1-service\.clearkey                        u:object_r:hal_drm_clearkey_exec:s0
+#/(vendor|system/vendor)/bin/hw/android\.hardware\.drm@1\.1-service\.clearkey                        u:object_r:hal_drm_clearkey_exec:s0
 /(vendor|system/vendor)/bin/hw/android\.hardware\.gnss@1\.1-service-qti                             u:object_r:hal_gnss_qti_exec:s0
 /(vendor|system/vendor)/bin/hw/android\.hardware\.light@2\.0-service.sony_msm8974                   u:object_r:hal_light_default_exec:s0
 
