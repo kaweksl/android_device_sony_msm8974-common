@@ -73,12 +73,7 @@ PRODUCT_COPY_FILES += \
     $(LOCAL_PATH)/configs/external_camera_config.xml:system/vendor/etc/external_camera_config.xml
 
 PRODUCT_PACKAGES += \
-    camera.qcom \
-    libshims_signal \
-    libshims_idd \
-    libsonycamera \
-    libshim_camera \
-    libshim_cald
+    camera.qcom
 
 # Display
 PRODUCT_PACKAGES += \
