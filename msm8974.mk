@@ -139,7 +139,11 @@ PRODUCT_PACKAGES += \
 
 # Lights
 PRODUCT_PACKAGES += \
-    android.hardware.light@2.0-service.sony_msm8974
+    lights.msm8974
+
+PRODUCT_PACKAGES += \
+	android.hardware.light@2.0-impl \
+    android.hardware.light@2.0-service
 
 # Media profile
 PRODUCT_COPY_FILES += \
