@@ -1,4 +1,4 @@
-# Copyright 2015 The Android Open Source Project
+# Copyright (C) 2008 The Android Open Source Project
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -15,19 +15,10 @@
 LOCAL_PATH:= $(call my-dir)
 
 include $(CLEAR_VARS)
-
-LOCAL_SRC_FILES := \
-	voice_processing_descriptors.c
-
-LOCAL_C_INCLUDES += \
-	$(call include-path-for, audio-effects)
-
-LOCAL_MULTILIB := $(AUDIOSERVER_MULTILIB)
-
-LOCAL_MODULE := libqcomvoiceprocessingdescriptors
-
-LOCAL_MODULE_RELATIVE_PATH := soundfx
-
+LOCAL_SRC_FILES := lights.c
+LOCAL_SHARED_LIBRARIES := liblog
+LOCAL_MODULE := lights.msm8974
 LOCAL_MODULE_TAGS := optional
-
+LOCAL_MODULE_RELATIVE_PATH := hw
+LOCAL_PROPRIETARY_MODULE := true
 include $(BUILD_SHARED_LIBRARY)

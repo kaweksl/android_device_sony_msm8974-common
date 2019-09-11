@@ -39,8 +39,10 @@ include $(LOCAL_PATH)/systemprop.mk
 
 # Audio
 PRODUCT_PACKAGES += \
-    android.hardware.audio@2.0-impl \
-    android.hardware.audio.effect@2.0-impl
+    android.hardware.audio.effect@4.0-impl \
+    android.hardware.audio@4.0-impl \
+    android.hardware.audio@2.0-service \
+    android.hardware.soundtrigger@2.1-impl
 
 PRODUCT_PACKAGES += \
     audio.a2dp.default \
@@ -52,7 +54,6 @@ PRODUCT_PACKAGES += \
     libaudio-resampler \
     libqcompostprocbundle \
     libqcomvisualizer \
-    libqcomvoiceprocessingdescriptors \
     libqcomvoiceprocessing \
     tinymix
 
@@ -73,12 +74,7 @@ PRODUCT_COPY_FILES += \
     $(LOCAL_PATH)/configs/external_camera_config.xml:system/vendor/etc/external_camera_config.xml
 
 PRODUCT_PACKAGES += \
-    camera.qcom \
-    libshims_signal \
-    libshims_idd \
-    libsonycamera \
-    libshim_camera \
-    libshim_cald
+    camera.qcom
 
 # Display
 PRODUCT_PACKAGES += \
@@ -113,8 +109,7 @@ PRODUCT_PACKAGES += \
 
 # GNSS
 PRODUCT_PACKAGES += \
-    android.hardware.gnss@1.1-impl-qti \
-    android.hardware.gnss@1.1-service-qti
+    android.hardware.gnss@1.0-impl
 
 # GPS
 PRODUCT_COPY_FILES += \
@@ -145,7 +140,11 @@ PRODUCT_PACKAGES += \
 
 # Lights
 PRODUCT_PACKAGES += \
-    android.hardware.light@2.0-service.sony_msm8974
+    lights.msm8974
+
+PRODUCT_PACKAGES += \
+	android.hardware.light@2.0-impl \
+    android.hardware.light@2.0-service
 
 # Media profile
 PRODUCT_COPY_FILES += \
